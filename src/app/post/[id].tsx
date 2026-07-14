@@ -40,7 +40,6 @@ const PostDetailScreen = () => {
   const [comments, setComments] = useState<FeedComment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [replyInfo, setReplyInfo] = useState<ReplyInfo | null>(null);
-  const [shareCount, setShareCount] = useState(0);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
 
@@ -182,16 +181,12 @@ const PostDetailScreen = () => {
         {/* Post Content and Comments List */}
         <FlatList
           data={comments}
-          extraData={[shareCount]}
+          extraData={[]}
           ListHeaderComponent={
             <PostDetailHeader
               post={post}
-              shareCount={shareCount}
               commentsCount={comments.length}
               hasNewComments={hasNewComments}
-              onShareComplete={() =>
-                setShareCount((prevShareCount) => prevShareCount + 1)
-              }
             />
           }
           renderItem={({ item }) => (

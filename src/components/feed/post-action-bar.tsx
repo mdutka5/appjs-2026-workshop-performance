@@ -9,18 +9,18 @@ import { useRouter } from "expo-router";
 
 interface PostActionBarProps {
   post: FeedPost;
-  onShareComplete: () => void;
 }
 
-export default function PostActionBar({
-  post,
-  onShareComplete,
-}: PostActionBarProps) {
+export default function PostActionBar({ post }: PostActionBarProps) {
   const colors = useContext(ColorsContext);
   const router = useRouter();
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [shareCount, setShareCount] = useState(0);
+
+  const onShareComplete = useCallback(() => {
+    setShareCount((prevShareCount) => prevShareCount + 1);
+  }, []);
 
   useEffect(() => {
     const foundPost = findPostForDetails(post.id);
@@ -58,7 +58,7 @@ export default function PostActionBar({
             postId={post.id}
             username={post.user.username}
             colors={colors}
-            onShareComplete={() => onShareComplete()}
+            onShareComplete={onShareComplete}
           />
         </View>
 

@@ -18,17 +18,14 @@ import PostActionBar from "@/components/feed/post-action-bar";
 
 interface PostDetailHeaderProps {
   post: FeedPost;
-  shareCount: number;
   commentsCount: number;
   hasNewComments: boolean;
-  onShareComplete: () => void;
 }
 
 export const PostDetailHeader = ({
   post,
   commentsCount,
   hasNewComments,
-  onShareComplete,
 }: PostDetailHeaderProps) => {
   const colors = useContext(ColorsContext);
   const router = useRouter();
@@ -117,7 +114,7 @@ export const PostDetailHeader = ({
 
       <ImageCarousel images={post.images} />
 
-      <PostActionBar post={post} onShareComplete={onShareComplete} />
+      <PostActionBar post={post} />
 
       {post.caption.length > 0 && (
         <View style={{ paddingHorizontal: 12, paddingTop: 4 }}>
