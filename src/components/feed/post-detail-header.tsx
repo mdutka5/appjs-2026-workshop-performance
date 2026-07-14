@@ -8,15 +8,13 @@ import {
   View,
 } from "react-native";
 
-import { BookmarkButton } from "@/components/feed/actions/bookmark-button";
-import { LikeButton } from "@/components/feed/actions/like-button";
-import { ShareButton } from "@/components/feed/actions/share-button";
 import { ImageCarousel } from "@/components/feed/content/image-carousel";
 import { PostOptionsMenu } from "@/components/feed/header/post-options-menu";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { ColorsContext } from "@/context/colors-context";
-import { findPostForDetails, FeedPost } from "@/data/mock-feed";
+import { FeedPost } from "@/data/mock-feed";
 import { formatRelativeTime } from "@/utils/feed-utils";
+import PostActionBar from "@/components/feed/post-action-bar";
 
 interface PostDetailHeaderProps {
   post: FeedPost;
@@ -28,7 +26,6 @@ interface PostDetailHeaderProps {
 
 export const PostDetailHeader = ({
   post,
-  shareCount,
   commentsCount,
   hasNewComments,
   onShareComplete,
@@ -39,26 +36,6 @@ export const PostDetailHeader = ({
   const [menuAnchor, setMenuAnchor] = useState<
     { x: number; y: number } | undefined
   >();
-  const [isLiked, setIsLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
-
-  useEffect(() => {
-    const foundPost = findPostForDetails(post.id);
-    if (foundPost) {
-      setIsLiked(foundPost.isLiked);
-      setLikesCount(foundPost.likes);
-    }
-  }, [post.id]);
-
-  const handleLike = useCallback(() => {
-    setIsLiked((prevIsLiked) => {
-      const nextIsLiked = !prevIsLiked;
-      setLikesCount(
-        (prevLikesCount) => prevLikesCount + (nextIsLiked ? 1 : -1),
-      );
-      return nextIsLiked;
-    });
-  }, []);
 
   return (
     <View>
@@ -140,49 +117,7 @@ export const PostDetailHeader = ({
 
       <ImageCarousel images={post.images} />
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingHorizontal: 12,
-          paddingVertical: 8,
-        }}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
-          <LikeButton isLiked={isLiked} colors={colors} onPress={handleLike} />
-          <ShareButton
-            postId={post.id}
-            username={post.user.username}
-            colors={colors}
-            onShareComplete={() => onShareComplete()}
-          />
-        </View>
-        <BookmarkButton
-          initialIsBookmarked={post.isBookmarked}
-          colors={colors}
-        />
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 8,
-          paddingHorizontal: 12,
-        }}
-      >
-        <TouchableOpacity onPress={() => router.push(`/likes/${post.id}`)}>
-          <Text style={{ fontWeight: "600", fontSize: 14, color: colors.text }}>
-            {likesCount.toLocaleString()} likes
-          </Text>
-        </TouchableOpacity>
-        {shareCount > 0 && (
-          <Text style={{ fontSize: 14, color: colors.icon }}>
-            · {shareCount} {shareCount === 1 ? "share" : "shares"}
-          </Text>
-        )}
-      </View>
+      <PostActionBar post={post} onShareComplete={onShareComplete} />
 
       {post.caption.length > 0 && (
         <View style={{ paddingHorizontal: 12, paddingTop: 4 }}>
