@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useTransition } from "react";
 import {
   View,
   Text,
@@ -23,7 +23,7 @@ import { detectSpam } from "@/utils/spam-detection";
 
 import { CommentInput } from "@/components/feed/comment-input";
 import { CommentItem } from "@/components/feed/comments/comment-item";
-import { findRelatedPosts } from "@/utils/related-posts";
+import { findRelatedPosts, RelatedPostResult } from "@/utils/related-posts";
 
 interface ReplyInfo {
   commentId: string;
@@ -43,6 +43,12 @@ const PostDetailScreen = () => {
   const [shareCount, setShareCount] = useState(0);
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
+  const [relatedPosts, setRelatedPosts] = useState<RelatedPostResult[]>([]);
+  const [isPending, startTransition] = useTransition();
+
+  startTransition(() => {
+    setRelatedPosts(post ? findRelatedPosts(post) : []);
+  });
 
   useEffect(() => {
     const foundPost = findPostForDetails(id);
@@ -54,8 +60,6 @@ const PostDetailScreen = () => {
 
   const hasNewComments = comments.length > prevCommentsLengthRef.current;
   prevCommentsLengthRef.current = comments.length;
-
-  const relatedPosts = post ? findRelatedPosts(post) : [];
 
   const handleReply = useCallback((commentId: string, username: string) => {
     setReplyInfo({ commentId, username });
