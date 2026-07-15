@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Image, ImageProps, View } from "react-native";
+import { ImageProps, View } from "react-native";
+import { Image } from "expo-image";
 
 import { ImageShimmer } from "./image-shimmer";
 
@@ -8,7 +9,11 @@ export const ImageWithShimmer = ({ style, ...imageProps }: ImageProps) => {
 
   return (
     <View style={[style, { overflow: "hidden" }]}>
-      <Image {...imageProps} style={style} onLoad={() => setIsLoaded(true)} />
+      <Image
+        source={imageProps.source}
+        style={style}
+        onLoad={() => setIsLoaded(true)}
+      />
       {!isLoaded && <ImageShimmer />}
     </View>
   );
