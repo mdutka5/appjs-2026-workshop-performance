@@ -1,5 +1,12 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState, useEffect, useCallback, useRef, useTransition } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useTransition,
+  useDeferredValue,
+} from "react";
 import {
   View,
   Text,
@@ -44,7 +51,6 @@ const PostDetailScreen = () => {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? "light"];
   const [relatedPosts, setRelatedPosts] = useState<RelatedPostResult[]>([]);
-  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const foundPost = findPostForDetails(id);
@@ -54,11 +60,11 @@ const PostDetailScreen = () => {
     }
   }, [id]);
 
+  const deferredPost = useDeferredValue(post);
+
   useEffect(() => {
-    startTransition(() => {
-      setRelatedPosts(post ? findRelatedPosts(post) : []);
-    });
-  }, [post]);
+    setRelatedPosts(deferredPost ? findRelatedPosts(deferredPost) : []);
+  }, [deferredPost]);
 
   const hasNewComments = comments.length > prevCommentsLengthRef.current;
   prevCommentsLengthRef.current = comments.length;
