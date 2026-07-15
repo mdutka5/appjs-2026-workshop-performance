@@ -46,10 +46,6 @@ const PostDetailScreen = () => {
   const [relatedPosts, setRelatedPosts] = useState<RelatedPostResult[]>([]);
   const [isPending, startTransition] = useTransition();
 
-  startTransition(() => {
-    setRelatedPosts(post ? findRelatedPosts(post) : []);
-  });
-
   useEffect(() => {
     const foundPost = findPostForDetails(id);
     if (foundPost) {
@@ -57,6 +53,12 @@ const PostDetailScreen = () => {
       setComments(foundPost.comments);
     }
   }, [id]);
+
+  useEffect(() => {
+    startTransition(() => {
+      setRelatedPosts(post ? findRelatedPosts(post) : []);
+    });
+  }, [post]);
 
   const hasNewComments = comments.length > prevCommentsLengthRef.current;
   prevCommentsLengthRef.current = comments.length;
