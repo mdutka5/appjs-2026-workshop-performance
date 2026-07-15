@@ -3,8 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 
 import { ColorsContext } from "@/context/colors-context";
-import { ImageWithShimmer } from "@/components/feed/shimmer/image-with-shimmer";
 import { SuggestedPost } from "@/data/mock-feed";
+import { Image } from "expo-image";
+
+const DEFAULT_BLURHASH = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
 
 export const SuggestedPostCard = ({ post }: { post: SuggestedPost }) => {
   const colors = useContext(ColorsContext);
@@ -20,18 +22,38 @@ export const SuggestedPostCard = ({ post }: { post: SuggestedPost }) => {
   };
 
   return (
-    <View style={[styles.card, { borderColor: colors.border, backgroundColor: colors.cardBackground }]}>
+    <View
+      style={[
+        styles.card,
+        { borderColor: colors.border, backgroundColor: colors.cardBackground },
+      ]}
+    >
       <TouchableOpacity onPress={openPost}>
-        <ImageWithShimmer source={{ uri: post.image }} style={styles.image} resizeMode="cover" />
+        <Image
+          source={{ uri: post.image }}
+          style={styles.image}
+          resizeMode="cover"
+          placeholder={{ blurhash: DEFAULT_BLURHASH }}
+        />
       </TouchableOpacity>
       <View style={styles.info}>
         <TouchableOpacity onPress={openProfile} style={styles.userRow}>
-          <ImageWithShimmer source={{ uri: post.avatar }} style={styles.avatar} />
-          <Text numberOfLines={1} style={[styles.username, { color: colors.text }]}>
+          <Image
+            source={{ uri: post.avatar }}
+            style={styles.avatar}
+            placeholder={{ blurhash: DEFAULT_BLURHASH }}
+          />
+          <Text
+            numberOfLines={1}
+            style={[styles.username, { color: colors.text }]}
+          >
             {post.username}
           </Text>
         </TouchableOpacity>
-        <Text numberOfLines={2} style={[styles.caption, { color: colors.icon }]}>
+        <Text
+          numberOfLines={2}
+          style={[styles.caption, { color: colors.icon }]}
+        >
           {post.caption}
         </Text>
         <TouchableOpacity
@@ -45,7 +67,12 @@ export const SuggestedPostCard = ({ post }: { post: SuggestedPost }) => {
             },
           ]}
         >
-          <Text style={[styles.followText, { color: isFollowing ? colors.text : "#fff" }]}>
+          <Text
+            style={[
+              styles.followText,
+              { color: isFollowing ? colors.text : "#fff" },
+            ]}
+          >
             {isFollowing ? "Following" : "Follow"}
           </Text>
         </TouchableOpacity>
