@@ -22,9 +22,9 @@ export const CommentPreview = ({
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(comment.likes);
 
-  useEffect(() => {
-    setLikeCount(comment.likes);
-  }, [comment.likes]);
+  // useEffect(() => {
+  //   setLikeCount(comment.likes);
+  // }, [comment.likes]);
 
   const formattedTime = formatRelativeTime(comment.timestamp);
 

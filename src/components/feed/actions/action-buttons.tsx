@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { View, TouchableOpacity, Share, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -9,29 +9,27 @@ import { LikesCount } from "@/components/feed/content/likes-count";
 export const ActionButtons = ({
   postId,
   username,
-  likes,
-  isLiked,
-  onLike,
+  initialIsLiked,
+  initialLikes,
 }: {
   postId: string;
   username: string;
-  likes: number;
-  isLiked: boolean;
-  onLike: (id: string) => void;
+  initialIsLiked: boolean;
+  initialLikes: number;
 }) => {
   const colors = useContext(ColorsContext);
   const router = useRouter();
 
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const [likes, setLikes] = useState(initialLikes);
+
   const likesText = (() => {
-    let text = "";
-    for (let i = 0; i < 100; i++) {
-      text = likes.toLocaleString();
-    }
-    return text + " likes";
+    return likes.toLocaleString() + " likes";
   })();
 
   const handleLike = () => {
-    onLike(postId);
+    setIsLiked(!isLiked);
+    setLikes(isLiked ? likes - 1 : likes + 1);
   };
 
   const handleComment = () => {
