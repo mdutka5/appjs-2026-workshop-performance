@@ -12,6 +12,7 @@ import { Image } from "expo-image";
 import { Colors } from "@/constants/theme";
 import { FeedComment } from "@/data/mock-feed";
 import { buildMentionSuggestions } from "@/utils/mention-utils";
+import { useMappingHelper } from "@shopify/flash-list";
 
 const AVATAR_SIZE = 40;
 
@@ -24,6 +25,8 @@ function MentionSuggestions({
   colors: typeof Colors.light;
   onSelect: (username: string) => void;
 }) {
+  const { getMappingKey } = useMappingHelper();
+
   // Run expensive work synchronously for each chip during this
   // component's render — this blocks the JS thread.
   const chips = suggestions.slice(0, 8).map((item) => {
@@ -42,9 +45,9 @@ function MentionSuggestions({
       }}
     >
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {chips.map((item) => (
+        {chips.map((item, index) => (
           <TouchableOpacity
-            key={item.username}
+            key={getMappingKey(item.username, index)}
             onPress={() => onSelect(item.username)}
             style={{
               paddingHorizontal: 12,

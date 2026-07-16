@@ -11,6 +11,7 @@ import {
 import { ColorsContext } from "@/context/colors-context";
 import { FeedImage } from "@/data/mock-feed";
 import { CarouselImage } from "./carousel-image";
+import { useMappingHelper } from "@shopify/flash-list";
 
 const IMAGE_WIDTH = 400;
 
@@ -32,6 +33,8 @@ export const ImageCarousel = ({
     }
   };
 
+  const { getMappingKey } = useMappingHelper();
+
   return (
     <View>
       <ScrollView
@@ -42,7 +45,7 @@ export const ImageCarousel = ({
         scrollEventThrottle={16}
       >
         {images.map((image, i) => (
-          <Pressable key={`${image.uri}-${i}`} onPress={onImagePress}>
+          <Pressable key={getMappingKey(image.uri, i)} onPress={onImagePress}>
             <CarouselImage image={image} />
           </Pressable>
         ))}
@@ -50,12 +53,12 @@ export const ImageCarousel = ({
 
       {images.length > 1 && (
         <View style={styles.dotsContainer}>
-          {images.map((_, i) => (
+          {images.map((_, index) => (
             <View
-              key={`dot-${i}`}
+              key={getMappingKey(`dot-${index}`, index)}
               style={[
                 styles.dot,
-                i === activeIndex
+                index === activeIndex
                   ? [styles.dotActive, { backgroundColor: colors.tint }]
                   : { backgroundColor: colors.icon + "40" },
               ]}

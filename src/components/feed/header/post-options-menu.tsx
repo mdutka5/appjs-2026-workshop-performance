@@ -15,6 +15,7 @@ import { useRouter } from "expo-router";
 
 import { ColorsContext } from "@/context/colors-context";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import { useMappingHelper } from "@shopify/flash-list";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const POPOVER_WIDTH = 220;
@@ -137,6 +138,8 @@ export const PostOptionsMenu = ({
     : SCREEN_WIDTH - POPOVER_WIDTH - 16;
   const popoverTop = anchorPosition ? anchorPosition.y + 10 : 100;
 
+  const { getMappingKey } = useMappingHelper();
+
   return (
     <Modal
       visible={visible}
@@ -159,7 +162,7 @@ export const PostOptionsMenu = ({
         >
           {menuOptions.map((option, index) => (
             <TouchableOpacity
-              key={option.label}
+              key={getMappingKey(option.label, index)}
               onPress={option.onPress}
               style={[
                 styles.menuItem,

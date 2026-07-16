@@ -5,6 +5,7 @@ import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
 import { FeedComment } from "@/data/mock-feed";
 import { formatRelativeTime } from "@/utils/feed-utils";
+import { useMappingHelper } from "@shopify/flash-list";
 
 export const CommentItem = ({
   comment,
@@ -25,6 +26,8 @@ export const CommentItem = ({
 
   const formattedTime = formatRelativeTime(comment.timestamp);
   const hasReplies = comment.replies && comment.replies.length > 0;
+
+  const { getMappingKey } = useMappingHelper();
 
   return (
     <View>
@@ -129,9 +132,9 @@ export const CommentItem = ({
       {/* Replies */}
       {showReplies &&
         hasReplies &&
-        comment.replies!.map((reply) => (
+        comment.replies!.map((reply, index) => (
           <CommentItem
-            key={reply.id}
+            key={getMappingKey(reply.id, index)}
             comment={reply}
             colors={colors}
             onReply={onReply}
