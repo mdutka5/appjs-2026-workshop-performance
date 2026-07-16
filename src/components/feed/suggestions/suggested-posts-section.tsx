@@ -1,5 +1,11 @@
 import { useContext } from "react";
-import { ScrollView, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { useRouter } from "expo-router";
 
 import { ColorsContext } from "@/context/colors-context";
@@ -7,7 +13,13 @@ import { SuggestedPost } from "@/data/mock-feed";
 
 import { SuggestedPostCard } from "./suggested-post-card";
 
-export const SuggestedPostsSection = ({ posts }: { posts: SuggestedPost[] }) => {
+import { FlashList } from "@shopify/flash-list";
+
+export const SuggestedPostsSection = ({
+  posts,
+}: {
+  posts: SuggestedPost[];
+}) => {
   const colors = useContext(ColorsContext);
   const router = useRouter();
 
@@ -18,16 +30,22 @@ export const SuggestedPostsSection = ({ posts }: { posts: SuggestedPost[] }) => 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>Suggested for you</Text>
+        <Text style={[styles.title, { color: colors.text }]}>
+          Suggested for you
+        </Text>
         <TouchableOpacity onPress={openSuggestions}>
           <Text style={[styles.seeAll, { color: colors.tint }]}>See All</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {posts.map((post) => (
-          <SuggestedPostCard key={post.id} post={post} />
-        ))}
-      </ScrollView>
+      <FlashList
+        data={posts}
+        renderItem={({ item }) => <SuggestedPostCard post={item} />}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        keyExtractor={(item) => item.id}
+        nestedScrollEnabled={false}
+      />
     </View>
   );
 };
@@ -35,8 +53,14 @@ export const SuggestedPostsSection = ({ posts }: { posts: SuggestedPost[] }) => 
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 12,
+    borderColor: "red",
+    borderWidth: 1,
+    borderStyle: "solid",
   },
   header: {
+    borderColor: "blue",
+    borderWidth: 1,
+    borderStyle: "solid",
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 12,
@@ -51,6 +75,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   scrollContent: {
+    borderColor: "green",
+    borderWidth: 1,
+    borderStyle: "solid",
     paddingHorizontal: 12,
   },
 });
